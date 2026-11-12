@@ -19,3 +19,11 @@ make
 ```
 
 Файл учетных данных содержит строку `LOGIN:PASSWORD`.
+
+## Модульные тесты
+
+Нужна библиотека UnitTest++ (`libunittest++-dev`).
+
+```
+make test
+```
