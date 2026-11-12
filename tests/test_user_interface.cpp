@@ -110,4 +110,26 @@ SUITE(UserInterface)
         UserInterface ui;
         CHECK_THROW(parseRequiredWith(ui, {"-p", "65536"}), InterfaceError);
     }
+
+    TEST(NegativePort)
+    {
+        UserInterface ui;
+        CHECK_THROW(parseRequiredWith(ui, {"-p", "-1"}), InterfaceError);
+    }
+
+    TEST(ZeroPort)
+    {
+        UserInterface ui;
+        CHECK_THROW(parseRequiredWith(ui, {"-p", "0"}), InterfaceError);
+    }
+
+    TEST(PortBoundaries)
+    {
+        UserInterface lowest;
+        CHECK(parseRequiredWith(lowest, {"-p", "1"}));
+        CHECK_EQUAL(1, lowest.params().port);
+        UserInterface highest;
+        CHECK(parseRequiredWith(highest, {"-p", "65535"}));
+        CHECK_EQUAL(65535, highest.params().port);
+    }
 }

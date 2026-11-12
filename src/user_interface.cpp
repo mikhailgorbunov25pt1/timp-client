@@ -33,7 +33,7 @@ UserInterface::UserInterface()
     description.add_options()("help,h", "show this help")(
         "address,a", po::value<std::string>(&parsed.address)->required(),
         "server IPv4 address")(
-        "port,p", po::value<uint16_t>(&parsed.port)->default_value(33333),
+        "port,p", po::value<int>()->default_value(33333),
         "server port")("input,i",
                        po::value<std::string>(&parsed.inputFile)->required(),
                        "input data file")(
@@ -59,6 +59,12 @@ bool UserInterface::parse(int argc, const char* const* argv)
     } catch (const po::error& e) {
         throw InterfaceError("UserInterface::parse", e.what());
     }
+    const int port = options["port"].as<int>();
+    if (port < 1 || port > 65535)
+        throw InterfaceError("UserInterface::parse",
+                             "port " + std::to_string(port) +
+                                 " is not in range 1..65535");
+    parsed.port = port;
     parsed.configFile = expandHome(parsed.configFile);
     return true;
 }
